@@ -1,0 +1,53 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build JAR
+        working-directory: backend
+        run: mvn clean package -DskipTests
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create .env on server
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cat > /opt/legaltech/.env << 'EOF'
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_NAME=${{ secrets.DB_NAME }}
+          DB_USERNAME=${{ secrets.DB_USERNAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          SUPABASE_JWT_ISSUER=${{ secrets.SUPABASE_JWT_ISSUER }}
+          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+          EOF"
+
+      - name: Upload JAR to server
+        run: |
+          scp -i ~/.ssh/deploy_key backend/target/*.jar ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/opt/legaltech/legaltech-backend.jar
+
+      - name: Restart service
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "systemctl restart legaltech-backend && systemctl status legaltech-backend --no-pager"

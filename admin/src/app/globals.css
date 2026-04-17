@@ -1,0 +1,147 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-heading);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * CGM Law Firm Brand Palette
+ * Navy Dark:   #0d1b2e  (background deep)
+ * Navy:        #1a3a5c  (primary brand)
+ * Royal Blue:  #2b5ea7  (accent, interactive)
+ * Steel:       #334766  (cards, surfaces)
+ * Silver:      #94a3b8  (muted text)
+ * Smoke:       #cbd5e1  (body text)
+ * Pearl:       #e8edf3  (headings)
+ */
+
+:root {
+  --background: #091220;
+  --foreground: #e2e8f0;
+  --card: #0f1d32;
+  --card-foreground: #e2e8f0;
+  --popover: #132442;
+  --popover-foreground: #e2e8f0;
+  --primary: #2b5ea7;
+  --primary-foreground: #ffffff;
+  --secondary: #162a48;
+  --secondary-foreground: #cbd5e1;
+  --muted: #162a48;
+  --muted-foreground: #64748b;
+  --accent: #1a3358;
+  --accent-foreground: #3b82f6;
+  --destructive: #dc2626;
+  --border: rgba(43, 94, 167, 0.15);
+  --input: rgba(43, 94, 167, 0.12);
+  --ring: #2b5ea7;
+  --chart-1: #2b5ea7;
+  --chart-2: #3b82f6;
+  --chart-3: #22c55e;
+  --chart-4: #f59e0b;
+  --chart-5: #8b5cf6;
+  --radius: 0.75rem;
+  --sidebar: #0a1628;
+  --sidebar-foreground: #94a3b8;
+  --sidebar-primary: #2b5ea7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(43, 94, 167, 0.1);
+  --sidebar-accent-foreground: #3b82f6;
+  --sidebar-border: rgba(43, 94, 167, 0.08);
+  --sidebar-ring: #2b5ea7;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(43, 94, 167, 0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(43, 94, 167, 0.4); }
+
+/* Brand glow */
+.brand-glow {
+  box-shadow: 0 0 24px rgba(43, 94, 167, 0.12), 0 0 80px rgba(43, 94, 167, 0.06);
+}
+
+/* Grain overlay */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  opacity: 0.012;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Animations */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fadeSlideUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes pulse-brand {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(43, 94, 167, 0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(43, 94, 167, 0); }
+}
+.pulse-brand {
+  animation: pulse-brand 2.5s ease-in-out infinite;
+}

@@ -8,11 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -39,12 +43,30 @@ public class BatchDocumentProcessingService {
         this.jobRepository = jobRepository;
     }
 
+    private SSLContext createTrustAllSslContext() {
+        try {
+            TrustManager[] trustAll = new TrustManager[]{
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+                    }
+            };
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            ctx.init(null, trustAll, new java.security.SecureRandom());
+            return ctx;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create SSL context", e);
+        }
+    }
+
     public byte[] downloadPdf(String url) throws IOException, InterruptedException {
         downloadSemaphore.acquire();
         try {
             HttpClient client = HttpClient.newBuilder()
                     .connectTimeout(Duration.ofSeconds(30))
                     .followRedirects(HttpClient.Redirect.NORMAL)
+                    .sslContext(createTrustAllSslContext())
                     .build();
 
             HttpRequest request = HttpRequest.newBuilder()

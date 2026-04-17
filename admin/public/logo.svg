@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" fill="none">
+  <!-- C letter -->
+  <path d="M45 15C25 15 10 32 10 60C10 88 25 105 45 105C58 105 68 98 73 88" stroke="#1a3a5c" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- G letter -->
+  <path d="M75 25C60 25 48 40 48 60C48 80 60 95 75 95C88 95 95 85 95 75V60H78" stroke="#1a3a5c" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <!-- M letter -->
+  <path d="M62 105V35L82 75L102 35V105" stroke="#1a3a5c" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Vertical line separator -->
+  <line x1="118" y1="20" x2="118" y2="100" stroke="#2b5ea7" stroke-width="2"/>
+  <!-- LAW FIRM text -->
+  <text x="130" y="65" font-family="Georgia, serif" font-size="36" font-weight="400" letter-spacing="4" fill="#5a5a5a">LAW FIRM</text>
+  <!-- Tagline -->
+  <text x="130" y="90" font-family="Georgia, serif" font-size="12" letter-spacing="2" fill="#8a8a8a">TU RESPALDO LEGAL EN CADA PASO</text>
+</svg>

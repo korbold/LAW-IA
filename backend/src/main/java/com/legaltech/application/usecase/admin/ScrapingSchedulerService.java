@@ -44,7 +44,7 @@ public class ScrapingSchedulerService {
                 }
 
                 schedule.setLastExecutionAt(Instant.now());
-                schedule.setNextExecutionAt(Instant.now().plus(Duration.ofHours(24)));
+                schedule.setNextExecutionAt(Instant.now().plus(parseCronInterval(schedule.getCronExpression())));
                 schedule.setUpdatedAt(Instant.now());
                 scheduleRepository.save(schedule);
             }
@@ -57,12 +57,44 @@ public class ScrapingSchedulerService {
 
         for (ScrapingScheduleEntity schedule : enabledSchedules) {
             if (schedule.getNextExecutionAt() == null) {
-                schedule.setNextExecutionAt(Instant.now().plus(Duration.ofHours(24)));
+                schedule.setNextExecutionAt(Instant.now().plus(parseCronInterval(schedule.getCronExpression())));
                 schedule.setUpdatedAt(Instant.now());
                 scheduleRepository.save(schedule);
                 log.info("Initialized next execution for schedule {}: {}",
                         schedule.getSection(), schedule.getNextExecutionAt());
             }
         }
+    }
+
+    // Parses interval expressions: "15d", "7d", "24h", or cron with day interval
+    private Duration parseCronInterval(String cronExpression) {
+        if (cronExpression == null) return Duration.ofDays(15);
+
+        String trimmed = cronExpression.trim().toLowerCase();
+
+        // Simple format: "15d", "7d", "24h"
+        if (trimmed.endsWith("d")) {
+            try {
+                int days = Integer.parseInt(trimmed.substring(0, trimmed.length() - 1));
+                return Duration.ofDays(days);
+            } catch (NumberFormatException ignored) {}
+        }
+        if (trimmed.endsWith("h")) {
+            try {
+                int hours = Integer.parseInt(trimmed.substring(0, trimmed.length() - 1));
+                return Duration.ofHours(hours);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        // Standard cron: try to extract day interval from "*/N" in day-of-month field
+        String[] parts = trimmed.split("\\s+");
+        if (parts.length >= 4 && parts[3].startsWith("*/")) {
+            try {
+                int days = Integer.parseInt(parts[3].substring(2));
+                return Duration.ofDays(days);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        return Duration.ofDays(15);
     }
 }

@@ -11,6 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -129,10 +133,28 @@ public class RegistroOficialScraper {
         return job;
     }
 
+    private SSLContext createTrustAllSslContext() {
+        try {
+            TrustManager[] trustAll = new TrustManager[]{
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+                    }
+            };
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            ctx.init(null, trustAll, new java.security.SecureRandom());
+            return ctx;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create SSL context", e);
+        }
+    }
+
     public List<EditionInfo> fetchEditions(String sectionUrl) throws Exception {
         Document doc = Jsoup.connect(sectionUrl)
                 .userAgent("Mozilla/5.0 (compatible; LegalTechBot/1.0)")
                 .timeout(30_000)
+                .sslSocketFactory(createTrustAllSslContext().getSocketFactory())
                 .get();
 
         List<EditionInfo> editions = new ArrayList<>();

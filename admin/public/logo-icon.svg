@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- C letter -->
+  <path d="M40 12C18 12 4 30 4 50C4 70 18 88 40 88C54 88 65 80 70 68" stroke="#1a3a5c" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- G letter -->
+  <path d="M60 22C44 22 32 36 32 50C32 64 44 78 60 78C72 78 80 68 80 58V45H62" stroke="#1a3a5c" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- M letter -->
+  <path d="M46 88V28L66 62L86 28V88" stroke="#2b5ea7" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

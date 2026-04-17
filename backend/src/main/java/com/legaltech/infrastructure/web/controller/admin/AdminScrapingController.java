@@ -120,8 +120,10 @@ public class AdminScrapingController {
         }
 
         ScrapingJobEntity job = scraper.scrapeSection(section);
-        auditService.log(admin, "SCRAPE_STARTED", "ScrapingJob", job.getId(),
-                "Started manual scrape for section: " + section);
+        if (admin != null) {
+            auditService.log(admin, "SCRAPE_STARTED", "ScrapingJob", job.getId(),
+                    "Started manual scrape for section: " + section);
+        }
         return toJobResponse(job);
     }
 

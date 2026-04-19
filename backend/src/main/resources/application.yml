@@ -38,6 +38,15 @@ gemini:
   model: gemini-2.5-flash
   base-url: https://generativelanguage.googleapis.com/v1beta
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
 logging:
   level:
     com.legaltech: INFO

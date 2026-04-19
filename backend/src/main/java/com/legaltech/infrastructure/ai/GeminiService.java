@@ -26,7 +26,11 @@ public class GeminiService {
 
     private static final Logger log = LoggerFactory.getLogger(GeminiService.class);
 
-    private static final String FALLBACK_PROMPT = "Eres un asistente legal ecuatoriano. Responde siempre en español.";
+    private static final String FALLBACK_PROMPT = """
+            Eres un asistente legal ecuatoriano especializado en legislación del Ecuador. \
+            Responde siempre en español con ortografía y espaciado correcto entre palabras. \
+            Sé claro, preciso y fundamenta tus respuestas en la normativa ecuatoriana vigente. \
+            Si no conoces la respuesta exacta, indícalo honestamente.""";
 
     private final GeminiConfig config;
     private final ObjectMapper objectMapper;

@@ -40,6 +40,6 @@ gemini:
 
 logging:
   level:
-    com.legaltech: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.web: DEBUG
+    com.legaltech: INFO
+    org.springframework.security: INFO
+    org.springframework.web: INFO
